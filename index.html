@@ -1,32 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- External CSS link -->
         <link rel="stylesheet" href="styles/main.css">
-        <title>Temperature Conversion</title>
+        <title>Unit Conversion Tool</title>
     </head>
     <body>
-        <h2>Fahrenheit to Celsius Conversion</h2>
-        <form action="#">
-            <label>Start Fahrenheit: 
-                <input type="number" id="start" value="32">
-            </label>
-            <br>
-            <label>End Fahrenheit:
-                <input type="number" id="end" value="100">
-            </label>
-            <br>
-            <!-- Binary Radio Inputs -->
-            <label for="csv">CSV:</label>
-            <input type="radio" value="csv">
-            <label for="html_table">HTML Table:</label> 
-            <input type="radio" value="html">
-            <br>
-            <!-- Submit form button -->
-            <input type="submit" id="submit_button">
-        </form>
-        <br>
-        <div id="result"></div>
+        <div class="container">
+            <h2 id="page-title">🌡️ Temperature Conversion</h2>
+
+            <div class="card">
+                <form action="#" id="conversion-form">
+                    <!-- Conversion Type Selector -->
+                    <div class="form-group">
+                        <label for="conversion-type">Conversion Type</label>
+                        <select id="conversion-type" name="conversion_type">
+                            <option value="temperature">Temperature (°F → °C)</option>
+                            <option value="distance">Distance (Miles → Kilometers)</option>
+                            <option value="weight">Weight (Pounds → Kilograms)</option>
+                        </select>
+                    </div>
+
+                    <!-- Start Value Input -->
+                    <div class="form-group">
+                        <label for="start" id="start-label">Start Fahrenheit</label>
+                        <input type="number" id="start" name="start" value="32" placeholder="Enter starting value" required step="any">
+                    </div>
+
+                    <!-- End Value Input -->
+                    <div class="form-group">
+                        <label for="end" id="end-label">End Fahrenheit</label>
+                        <input type="number" id="end" name="end" value="100" placeholder="Enter ending value" required step="any">
+                    </div>
+
+                    <!-- Output Format Radio Buttons -->
+                    <div class="form-group">
+                        <label>Output Format</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="html_format" name="format" value="html" checked>
+                                <label for="html_format">HTML Table</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="csv_format" name="format" value="csv">
+                                <label for="csv_format">CSV Download</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group">
+                        <input type="submit" id="submit_button" value="Convert">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Container -->
+            <div id="result"></div>
+        </div>
 
         <!-- External JS link -->
         <script src="scripts/main.js"></script>
