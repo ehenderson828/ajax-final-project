@@ -5,62 +5,90 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- External CSS link -->
         <link rel="stylesheet" href="styles/main.css">
+        <!-- Favicon link -->
+        <link rel="icon" type="image/x-icon" href="assets/images/measure.png">
         <title>Unit Conversion Tool</title>
     </head>
     <body>
         <div class="container">
             <h2 id="page-title">🌡️ Temperature Conversion</h2>
-
+            <!-- Converstion selection & input value form -->
             <div class="card">
                 <form action="#" id="conversion-form">
                     <!-- Conversion Type Selector -->
                     <div class="form-group">
-                        <label for="conversion-type">Conversion Type</label>
+                        <label for="conversion-type">Conversion Type:</label>
                         <select id="conversion-type" name="conversion_type">
                             <option value="temperature">Temperature (°F → °C)</option>
                             <option value="distance">Distance (Miles → Kilometers)</option>
                             <option value="weight">Weight (Pounds → Kilograms)</option>
                         </select>
                     </div>
-
                     <!-- Start Value Input -->
                     <div class="form-group">
-                        <label for="start" id="start-label">Start Fahrenheit</label>
-                        <input type="number" id="start" name="start" value="32" placeholder="Enter starting value" required step="any">
+                        <label for="start" id="start-label">Starting Fahrenheit Value:</label>
+                        <input 
+                            type="number" 
+                            id="start" 
+                            name="start" 
+                            value="32" 
+                            placeholder="Enter starting value" 
+                            required 
+                            step="any"
+                        >
                     </div>
-
                     <!-- End Value Input -->
                     <div class="form-group">
-                        <label for="end" id="end-label">End Fahrenheit</label>
-                        <input type="number" id="end" name="end" value="100" placeholder="Enter ending value" required step="any">
+                        <label for="end" id="end-label">Ending Fahrenheit Value:</label>
+                        <input 
+                            type="number" 
+                            id="end" 
+                            name="end" 
+                            value="100" 
+                            placeholder="Enter ending value" 
+                            required 
+                            step="any"
+                        >
                     </div>
-
                     <!-- Output Format Radio Buttons -->
                     <div class="form-group">
-                        <label>Output Format</label>
+                        <label>Output Format:</label>
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="html_format" name="format" value="html" checked>
+                                <input 
+                                    type="radio" 
+                                    id="html_format" 
+                                    name="format" 
+                                    value="html"
+                                    checked
+                                >
                                 <label for="html_format">HTML Table</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="csv_format" name="format" value="csv">
+                                <input 
+                                    type="radio" 
+                                    id="csv_format" 
+                                    name="format" 
+                                    value="csv"
+                                >
                                 <label for="csv_format">CSV Download</label>
                             </div>
                         </div>
                     </div>
-
                     <!-- Submit Button -->
                     <div class="form-group">
-                        <input type="submit" id="submit_button" value="Convert">
+                        <input 
+                            type="submit" 
+                            id="submit_button" 
+                            value="Convert"
+                            onclick="playHuh()"
+                        >
                     </div>
                 </form>
             </div>
-
             <!-- Results Container -->
             <div id="result"></div>
         </div>
-
         <!-- External JS link -->
         <script src="scripts/main.js"></script>
     </body>

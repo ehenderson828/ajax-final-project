@@ -1,4 +1,3 @@
-<!-- This script converts between different units (temperature, distance, weight) within a specified range. Results are output as either a downloadable CSV file or a rendered HTML table -->
 <?php
     // Get and validate request parameters
     $start = isset($_REQUEST['start']) ? (float)$_REQUEST['start'] : 0;
@@ -21,7 +20,7 @@
             'fromSymbol' => '°F',
             'toSymbol' => '°C',
             'convert' => function($f) {
-                return round(($f - 32) * 5 / 9, 1);
+                return round(($f - 32) * 5 / 9, 1); // Rounded to a single sig. fig.
             }
         ],
         'distance' => [
@@ -30,7 +29,7 @@
             'fromSymbol' => 'mi',
             'toSymbol' => 'km',
             'convert' => function($miles) {
-                return round($miles * 1.60934, 1);
+                return round($miles * 1.60934, 1); // Rounded to a single sig. fig.
             }
         ],
         'weight' => [
@@ -39,7 +38,7 @@
             'fromSymbol' => 'lbs',
             'toSymbol' => 'kg',
             'convert' => function($lbs) {
-                return round($lbs * 0.453592, 1);
+                return round($lbs * 0.453592, 1); // Rounded to a single sig. fig.
             }
         ]
     ];
@@ -49,25 +48,90 @@
 
     // CSV Format Output
     if ($format === 'csv') {
-        // Send headers for CSV download
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $conversionType . '_conversions.csv"');
+        // Check to see if this is the actual download request in URL params
+        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'preview';
+        if($action === 'download') {
+            // Send headers for CSV download
+            header('Content-Type: text/csv');
+            // Append the conversionType string to the file name
+            header('Content-Disposition: attachment; filename="' . $conversionType . '_conversions.csv"');
 
-        // Open output stream
-        $output = fopen('php://output', 'w');
+            // Open output stream in write mode
+            $output = fopen('php://output', 'w');
 
-        // Write header row
-        fputcsv($output, [$config['fromLabel'], $config['toLabel']]);
+            // Write header row - starting and ending values
+            fputcsv($output, [$config['fromLabel'], $config['toLabel']]);
 
-        // Generate and write conversion rows
-        for ($value = $start; $value <= $end; $value++) {
-            $converted = $config['convert']($value);
-            fputcsv($output, [$value, $converted]);
+            // Generate and write conversion rows
+            for ($value = $start; $value <= $end; $value++) {
+                $converted = $config['convert']($value);
+                fputcsv($output, [$value, $converted]);
+            }
+            // Close file handler
+            fclose($output);
+            exit;
         }
 
-        // Close file handler
-        fclose($output);
-        exit;
+        else {
+          // PREVIEW - Show download button
+          echo "<style>
+              .download-ready {
+                  text-align: center;
+                  padding: 3rem 2rem;
+                  border-radius: 16px;
+                  animation: scaleIn 0.5s ease-out;
+              }
+              .download-ready h3 {
+                  color: var(--primary);
+                  font-size: 1.5rem;
+                  margin-bottom: 1rem;
+                  font-weight: 700;
+              }
+              .download-ready p {
+                  color: var(--gray-700);
+                  margin-bottom: 2rem;
+                  font-size: 1.1rem;
+              }
+              .download-button {
+                  display: inline-block;
+                  padding: 1rem 2.5rem;
+                  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                  color: var(--white);
+                  text-decoration: none;
+                  border-radius: 12px;
+                  font-weight: 700;
+                  font-size: 1.1rem;
+                  transition: all 0.3s ease;
+                  box-shadow: var(--shadow-lg);
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+              }
+              .download-button:hover {
+                  transform: translateY(-3px);
+                  box-shadow: var(--shadow-xl);
+              }
+              .download-button:active {
+                  transform: translateY(-1px);
+              }
+          </style>";
+
+          echo "<div class='download-ready card'>";
+          echo "<h3>✅ Conversion CSV</h3>";
+          echo "<p>Your conversion table has been generated and is ready to download.</p>";
+
+          // Build the download URL with all parameters
+          $downloadUrl = 'scripts/convert.php?' . http_build_query([
+              'start' => $start,
+              'end' => $end,
+              'conversion_type' => $conversionType,
+              'format' => 'csv',
+              'action' => 'download'
+            ]);
+
+          // Render download button
+          echo "<a href='{$downloadUrl}' class='download-button' onclick='playWow()'>📥 Download CSV File</a>";
+          echo "</div>";
+        }
     }
     // HTML Table Format Output
     else {

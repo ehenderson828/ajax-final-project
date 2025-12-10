@@ -1,30 +1,44 @@
-// Configuration object for different conversion types
+// Configuration object for different conversion types - changes the UI
 const conversionConfig = {
     temperature: {
         title: '🌡️ Temperature Conversion',
-        startLabel: 'Start Fahrenheit',
-        endLabel: 'End Fahrenheit',
+        startLabel: 'Starting Fahrenheit Value:',
+        endLabel: 'Ending Fahrenheit Value:',
         startDefault: 32,
         endDefault: 100,
         emoji: '🌡️'
     },
     distance: {
         title: '📏 Distance Conversion',
-        startLabel: 'Start Miles',
-        endLabel: 'End Miles',
+        startLabel: 'Starting Miles Value:',
+        endLabel: 'Ending Miles Value:',
         startDefault: 1,
         endDefault: 10,
         emoji: '📏'
     },
     weight: {
         title: '⚖️ Weight Conversion',
-        startLabel: 'Start Pounds',
-        endLabel: 'End Pounds',
+        startLabel: 'Starting Pounds Value:',
+        endLabel: 'Ending Pounds Value:',
         startDefault: 1,
         endDefault: 10,
         emoji: '⚖️'
     }
 };
+
+// Function to play the 'huh' sound when clicking the convert button
+function playHuh() {
+    const audio = new Audio('assets/sounds/huh.mp3');
+    setTimeout(function(){
+        audio.play();
+    }, 750);
+}
+
+// Function to play the 'wow' sound when clicking the download button
+function playWow() {
+    const audio = new Audio('assets/sounds/wow.mp3');
+        audio.play();
+} 
 
 // Run callback after DOM loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,10 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('conversion-form');
     const submitButton = document.getElementById('submit_button');
 
-    // Function to update UI based on conversion type
+    // Function to update UI based on conversion type - runs each time DOM loads & reloads
     function updateConversionUI() {
         // Get the selected conversion type
         const conversionType = conversionTypeSelect.value;
+        // Append that value to conversionType at position - gives access to all properties
         const config = conversionConfig[conversionType];
 
         // Update page title with animation
@@ -64,19 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
         startInput.value = config.startDefault;
         endInput.value = config.endDefault;
 
-        // Clear previous results
+        // Clear previous results in output div
         document.getElementById('result').innerHTML = '';
     }
 
-    // Function to get selected format from radio buttons
+    // Function to get selected output format from radio buttons
     function getSelectedFormat() {
         const formatRadios = document.getElementsByName('format');
+        // Loop through both radio buttons
         for (const radio of formatRadios) {
             if (radio.checked) {
                 return radio.value;
             }
         }
-        return 'html'; // Default to html if nothing selected
+        return 'html'; // Default to html if nothing else selected
     }
 
     // Function to handle form submission and make AJAX request
@@ -90,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const conversionType = conversionTypeSelect.value;
         const format = getSelectedFormat();
 
-        // Validate inputs
+        // Validate inputs - alert user if neither values are present
         if (!start || !end) {
             alert('Please enter both start and end values');
             return;
@@ -98,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show loading state
         const resultDiv = document.getElementById('result');
+        // Append loading spinner while while Ajax sends data to convert.php
         resultDiv.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--primary);"><div class="loading"></div><p style="margin-top: 1rem;">Converting...</p></div>';
 
         // Create new XMLHttpRequest
@@ -113,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.onreadystatechange = function() {
             // Check if request is complete and successful
             if (xhr.readyState === 4 && xhr.status === 200) {
-                // Display the response in the result div
+                // Display the response in the result div - converted from PHP
                 resultDiv.innerHTML = xhr.responseText;
             } else if (xhr.readyState === 4) {
                 // Handle errors
@@ -121,12 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Send the request with parameters
+        // Send the request with URL parameters encoded for UTF-8 conversion in Param transfer
         const params = `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&conversion_type=${encodeURIComponent(conversionType)}&format=${encodeURIComponent(format)}`;
         xhr.send(params);
     }
 
-    // Add event listener for conversion type changes
+    // Add event listener for conversion type changes, call updateConversioUI() and update the page based on a selection
     conversionTypeSelect.addEventListener('change', updateConversionUI);
 
     // Add event listener for form submission
@@ -134,8 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Prevent default button click behavior
     submitButton.addEventListener('click', (event) => {
-        // Let the form submit event handle it
-        // This just ensures the button works
+        // Form submit will handle this
+        console.log('Button works!')
     });
 
     // Initialize UI on page load
